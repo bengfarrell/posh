@@ -1,0 +1,15 @@
+{
+  "name": "posh",
+  "version": "0.0.1",
+  "preferGlobal": "true",
+  "bin": {
+    "posh": "commands/cli"
+  },
+  "devDependencies": {
+    "gulp-download-atom-shell": "0.0.4",
+    "gulp-util": "^2.2.14"
+  },
+  "dependencies": {
+    "commander": "^2.5.0"
+  }
+}
