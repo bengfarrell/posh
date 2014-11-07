@@ -1,32 +1,39 @@
 var poshcfg = function() {
+    var self = this;
+
     /** app defaults */
     this.html = 'index.html';
     this.debug = false;
     this.frame = true;
     this.fullscreen = false;
+    this.verbose = true;
+    /*******************/
 
     /**
      * apply args from CLI
      */
-    this.applyArgsToConfig = function() {
+    this.load = function() {
         process.argv.forEach(function (arg) {
             var key = arg.split(':')[0];
             var value = arg.split(':')[1];
 
             if (value != "undefined" && value != undefined && value) {
-                this[key] = value;
+                self[key] = value;
                 if (key == "debug" || key == "frame" || key == "fullscreen") {
-                    this.debug = (this.debug == "true") ? true : false;
-                    this.frame = (this.frame == "true") ? true : false;
-                    this.fullscreen = (this.fullscreen == "true") ? true : false;
+                    self.debug = (self.debug == "true") ? true : false;
+                    self.frame = (self.frame == "true") ? true : false;
+                    self.fullscreen = (self.fullscreen == "true") ? true : false;
                 }
 
-                if (verbose) {
+                if (self.verbose) {
                     console.log("Setting config." + key + " to " + value);
                 }
             }
         });
     }
+
+    this.load();
+    console.log(this.html)
 }
 
 module.exports = poshcfg;

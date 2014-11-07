@@ -51,7 +51,7 @@ posh.runComponent = function(comp, options) {
 
     var args = [
         cfg["atomshell-app-directory"],
-        'html:' + cfg["components"] + '/' + comp + '/' + cfg["polymer-demo-path"]];
+        'html:' + cfg.__pathToComponents + '/' + comp + '/' + cfg["polymer-demo-path"]];
 
     if (options.debug) { args.push('debug:' + options.debug ); }
     spawn(binpath, args);

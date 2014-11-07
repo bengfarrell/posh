@@ -4,9 +4,9 @@ var poshwin = function() {
     /**
      * create new window
      */
-    this.create(cfg) {
+    this.create = function(cfg) {
         var window = new BrowserWindow({frame: cfg.frame, fullscreen: cfg.fullscreen});
-        window.loadUrl('file://' + __dirname + '/' + cfg.html);
+        window.loadUrl('file://' + process.cwd() + '/' + cfg.html);
         if (cfg) { window.openDevTools(); }
         return window;
     }
