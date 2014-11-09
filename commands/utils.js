@@ -103,10 +103,6 @@ posh.filterBy = function(comp, options, cfg) {
         if (prfx == options.prefixed) {
             return {name: comp, bower: bower};
         } else { return; }
-    } else if (options.nopoly) { // list non-polymer components
-        if (cfg["polymer-prefixes"].indexOf(prfx) == -1) {
-            return {name: comp, bower: bower};
-        } else { return; }
     } else {
         return {name: comp, bower: bower};
     }
