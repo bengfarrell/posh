@@ -17,8 +17,7 @@ var poshapp = function() {
         require('crash-reporter').start();
 
         this.application.on('window-all-closed', function() {
-            if (process.platform != 'darwin')
-                self.application.quit();
+            self.application.quit();
         });
 
         this.application.on('ready', function() {

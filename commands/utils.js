@@ -44,10 +44,10 @@ posh.runComponent = function(comp, options) {
     }
 
     // Atom-Shell bin path
-    // todo: support OSX
     var myOS = require('os').platform();
     var binpath = 'binaries/atom';
     if (myOS.substr(0,3) == "win") { binpath = 'binaries\\atom.exe'; }
+    if (myOS.substr(0,6) == "darwin") { binpath = 'binaries/Atom.app/Contents/MacOS/Atom'; }
 
     var args = [cfg["atomshell-app-directory"], 'html:' + cfg.__pathToComponents + '/' + comp + '/' + cfg["polymer-demo-path"]];
 
