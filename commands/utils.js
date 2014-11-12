@@ -1,5 +1,7 @@
 var fs = require('fs');
+var fsutils = require('fs-utils');
 var spawn = require('child_process').spawn;
+var downloadatomshell = require('gulp-download-atom-shell');
 
 posh = {};
 
@@ -104,6 +106,42 @@ posh.filterBy = function(comp, options, cfg) {
     } else {
         return {name: comp, bower: bower};
     }
+}
+
+posh.install = function(cfg) {
+
+    // download atom shell
+    downloadatomshell({
+        version: cfg["atomshell-version"],
+        outputDir: cfg["atomshell-directory"]
+    }, function() {
+        console.log("Downloaded Atom-Shell");
+    });
+
+    // make application directory
+    if (!fs.existsSync(process.cwd() + "/" + cfg["atomshell-app-directory"])) {
+        fs.mkdirSync(process.cwd() + "/" +  cfg["atomshell-app-directory"])
+    }
+
+    // make component directory
+    if (!fs.existsSync(process.cwd() + "/" + cfg["atomshell-app-directory"]  + "/" + cfg["components"])) {
+        fs.mkdirSync(process.cwd() + "/" + cfg["atomshell-app-directory"] + "/" + cfg["components"])
+    }
+
+    // copy over starter files
+    if (!fs.existsSync(process.cwd() + "/" + cfg["atomshell-app-directory"] + "/main.js")) {
+        fsutils.copyFileSync(__dirname + "/../starterfiles/main.js", process.cwd() + "/" + cfg["atomshell-app-directory"] + "/main.js");
+    } else {
+        console.log("It looks like you already have a main.js file, so Posh won't replace it");
+    }
+
+    if (!fs.existsSync("./" + cfg["atomshell-app-directory"] + "/package.json")) {
+        fsutils.copyFileSync(__dirname + "/../starterfiles/atom-package.json", process.cwd() + "/" + cfg["atomshell-app-directory"] + "/package.json");
+    } else {
+        console.log("It looks like you already have a package.json file for your app, so Posh won't replace it");
+    }
+
+
 }
 
 module.exports = posh;
