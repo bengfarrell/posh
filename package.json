@@ -6,11 +6,9 @@
     "posh": "commands/cli"
   },
   "main": "./lib/posh.js",
-  "devDependencies": {
+  "dependencies": {
+    "commander": "^2.5.0",
     "gulp-download-atom-shell": "0.0.4",
     "gulp-util": "^2.2.14"
-  },
-  "dependencies": {
-    "commander": "^2.5.0"
   }
 }

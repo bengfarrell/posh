@@ -21,7 +21,7 @@ var poshcfg = function() {
                 self[key] = value;
                 if (key == "debug" || key == "frame" || key == "fullscreen") {
                     self.debug = (self.debug == "true") ? true : false;
-                    self.frame = (self.frame == "true") ? true : false;
+                    self.frame = (self.frame == "false") ? false : true;
                     self.fullscreen = (self.fullscreen == "true") ? true : false;
                 }
 
