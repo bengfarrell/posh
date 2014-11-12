@@ -13,6 +13,7 @@ posh.defaultConfig = {
     "atomshell-app-directory": "app",
     "polymer-prefixes": ["core", "paper", "polymer", "platform", "font"],
     "polymer-demo-path": "demo.html",
+    "starting-components": [],
     "use-bower-for-component-id": true
 }
 
@@ -128,6 +129,11 @@ posh.install = function(cfg) {
         fs.mkdirSync(process.cwd() + "/" + cfg["atomshell-app-directory"] + "/" + cfg["components"])
     }
 
+    // create bower file
+    if (!fs.existsSync(process.cwd() + "/" + cfg["atomshell-app-directory"]  + "/" + cfg["components"])) {
+        fs.mkdirSync(process.cwd() + "/" + cfg["atomshell-app-directory"] + "/" + cfg["components"])
+    }
+
     // copy over starter files
     if (!fs.existsSync(process.cwd() + "/" + cfg["atomshell-app-directory"] + "/main.js")) {
         fsutils.copyFileSync(__dirname + "/../starterfiles/main.js", process.cwd() + "/" + cfg["atomshell-app-directory"] + "/main.js");
@@ -139,6 +145,20 @@ posh.install = function(cfg) {
         fsutils.copyFileSync(__dirname + "/../starterfiles/atom-package.json", process.cwd() + "/" + cfg["atomshell-app-directory"] + "/package.json");
     } else {
         console.log("It looks like you already have a package.json file for your app, so Posh won't replace it");
+    }
+
+    if (!fs.existsSync("./" + cfg["atomshell-app-directory"] + "/.bowerrc")) {
+        fsutils.copyFileSync(__dirname + "/../starterfiles/.bowerrc", process.cwd() + "/" + cfg["atomshell-app-directory"] + "/.bowerrc");
+    } else {
+        console.log("It looks like you already have a .bowerrc file for your app, so Posh won't replace it");
+    }
+
+    // deal with Bower.json
+    var bower;
+    if (fs.existsSync("./bower.json")) {
+        bower = fsutils.readJSONSync("./bower.json");
+    } else {
+        bower = fsutils.readJSONSync("./bower.json");
     }
 
 
