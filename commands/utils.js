@@ -49,9 +49,7 @@ posh.runComponent = function(comp, options) {
     var binpath = 'binaries/atom';
     if (myOS.substr(0,3) == "win") { binpath = 'binaries\\atom.exe'; }
 
-    var args = [
-        cfg["atomshell-app-directory"],
-        'html:' + cfg.__pathToComponents + '/' + comp + '/' + cfg["polymer-demo-path"]];
+    var args = [cfg["atomshell-app-directory"], 'html:' + cfg.__pathToComponents + '/' + comp + '/' + cfg["polymer-demo-path"]];
 
     if (options.debug) { args.push('debug:' + options.debug ); }
     spawn(binpath, args);

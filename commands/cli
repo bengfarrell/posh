@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var program = require('commander');
+var downloadatomshell = require('gulp-download-atom-shell');
 var poshutils = require('./utils');
 
 // Task to list defaults
@@ -31,11 +32,10 @@ program
     .description('Work with components: Run or list')
     .option("-p, --prefixed [mode]", "Restrict listing components to these prefixes")
     .option("-d, --debug [mode]", "Enable Debug Mode at start (developer tools)")
-    .option("-h, --html [mode]", "HTML start page")
     .action(function(env, options){
         switch (env) {
             case "list": poshutils.listComponents(options); break;
-            default: poshutils.runComponent(env, options); break;
+            default: poshutils.runComponent(env, options);
         }
     });
 

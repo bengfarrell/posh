@@ -7,7 +7,7 @@ var poshwin = function() {
     this.create = function(cfg) {
         var window = new BrowserWindow({frame: cfg.frame, fullscreen: cfg.fullscreen});
         window.loadUrl('file://' + process.cwd() + '/' + cfg.html);
-        if (cfg) { window.openDevTools(); }
+        if (cfg.debug) { window.openDevTools(); }
         return window;
     }
 }
