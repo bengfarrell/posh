@@ -13,11 +13,11 @@ program
 
 // Task to install the environment
 program
-    .command('install [env]')
+    .command('create [env]')
     .description('install posh and friends for this project')
     .action(function(env, options){
         var cfg = poshutils.loadConfig();
-        poshutils.install(cfg)
+        poshutils.create(env, cfg)
     });
 
 // Components task

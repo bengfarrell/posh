@@ -1,6 +1,6 @@
 var fs = require('fs');
 var fsutils = require('fs-utils');
-var spawn = require('child_process').spawn;
+var spawn = require('win-spawn');
 var downloadatomshell = require('gulp-download-atom-shell');
 
 posh = {};
@@ -13,7 +13,8 @@ posh.defaultConfig = {
     "atomshell-app-directory": "app",
     "polymer-prefixes": ["core", "paper", "polymer", "platform", "font"],
     "polymer-demo-path": "demo.html",
-    "starting-components": [],
+    "bower-dependencies": {"posh-starter": "https://github.com/theposhery/posh-starter.git#v0.1"},
+    "npm-dependencies": {"posh": "git+https://github.com/bengfarrell/posh.git#master"},
     "use-bower-for-component-id": true
 }
 
@@ -109,7 +110,7 @@ posh.filterBy = function(comp, options, cfg) {
     }
 }
 
-posh.install = function(cfg) {
+posh.create = function(env, cfg) {
 
     // download atom shell
     downloadatomshell({
@@ -147,21 +148,59 @@ posh.install = function(cfg) {
         console.log("It looks like you already have a package.json file for your app, so Posh won't replace it");
     }
 
-    if (!fs.existsSync("./" + cfg["atomshell-app-directory"] + "/.bowerrc")) {
-        fsutils.copyFileSync(__dirname + "/../starterfiles/.bowerrc", process.cwd() + "/" + cfg["atomshell-app-directory"] + "/.bowerrc");
+    if (!fs.existsSync(process.cwd() + "/.bowerrc")) {
+        fsutils.copyFileSync(__dirname + "/../starterfiles/.bowerrc", process.cwd() + "/.bowerrc");
     } else {
         console.log("It looks like you already have a .bowerrc file for your app, so Posh won't replace it");
     }
 
-    // deal with Bower.json
-    var bower;
-    if (fs.existsSync("./bower.json")) {
-        bower = fsutils.readJSONSync("./bower.json");
-    } else {
-        bower = fsutils.readJSONSync("./bower.json");
+    var package = posh.loadCurrentDependencies("../starterfiles/rootproject-package.json", "./package.json");
+    var bower = posh.loadCurrentDependencies("../starterfiles/bower.json", "./bower.json");
+    bower = posh.addDependencies(bower, cfg["bower-dependencies"]);
+    package = posh.addDependencies(package, cfg["npm-dependencies"]);
+
+    if (env) {
+        bower.name = env;
+        package.name = env;
     }
 
+    fs.writeFileSync("bower.json", JSON.stringify(bower, null, 2));
+    fs.writeFileSync("package.json", JSON.stringify(package, null, 2));
+    var npm = spawn("npm", ["install"]);
+    npm.stdout.on('data', function (data) { console.log(" " + data); });
+    npm.stderr.on('data', function (data) { console.log(" " + data); });
+    npm.on('close', function (exitCode) {
+        var bower = spawn("bower", ["install"]);
+        bower.on('close', function(exitCode) {
+           console.log("Setup finished. Try your first component - enter 'posh comp posh-starter'");
+        });
+        bower.stdout.on('data', function (data) { console.log(" " + data); });
+        bower.stderr.on('data', function (data) { console.log(" " + data); });
+    });
 
+}
+
+// load dependencies
+posh.loadCurrentDependencies = function(src, dest) {
+    var manifest;
+    if (fs.existsSync(dest)) {
+        manifest = fsutils.readJSONSync(dest);
+    } else {
+        manifest = fsutils.readJSONSync(__dirname + "/" + src);
+    }
+    return manifest;
+}
+
+// add dependencies to package (bower or package.json)
+posh.addDependencies = function(manifest, dependenciesToAdd) {
+    var currentDependencies = [];
+    for (var c in manifest.dependencies) { currentDependencies.push(c); }
+    for (var c in dependenciesToAdd) {
+        if ( currentDependencies.indexOf(c) == -1 ) {
+            manifest.dependencies[c] = dependenciesToAdd[c];
+        }
+    }
+    return manifest;
 }
 
 module.exports = posh;
