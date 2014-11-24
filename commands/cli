@@ -20,6 +20,15 @@ program
         poshutils.create(env, cfg)
     });
 
+// Task to install atom shell
+program
+    .command('installatom [env]')
+    .description('install Atom-Shell (or reinstall a specific version')
+    .action(function(env, options){
+        var cfg = poshutils.loadConfig();
+        poshutils.installatom(env, cfg)
+    });
+
 // Components task
 program
     .command('comp [env]')

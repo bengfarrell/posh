@@ -8,7 +8,7 @@ posh = {};
 posh.defaultConfig = {
     "root": ".",
     "components": "components",
-    "atomshell-version": "0.16.2",
+    "atomshell-version": "0.19.4",
     "atomshell-directory": "binaries",
     "atomshell-app-directory": "app",
     "polymer-prefixes": ["core", "paper", "polymer", "platform", "font"],
@@ -110,8 +110,7 @@ posh.filterBy = function(comp, options, cfg) {
     }
 }
 
-posh.create = function(env, cfg) {
-
+posh.installatom = function(env, cfg) {
     // download atom shell
     downloadatomshell({
         version: cfg["atomshell-version"],
@@ -119,6 +118,11 @@ posh.create = function(env, cfg) {
     }, function() {
         console.log("Downloaded Atom-Shell");
     });
+}
+
+posh.create = function(env, cfg) {
+
+    posh.installatom(env, cfg);
 
     // make application directory
     if (!fs.existsSync(process.cwd() + "/" + cfg["atomshell-app-directory"])) {
