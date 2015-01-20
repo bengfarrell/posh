@@ -9,7 +9,7 @@ posh.defaultConfig = {
     "root": ".",
     "application-main-page": "index.html",
     "components": "components",
-    "atomshell-version": "0.19.4",
+    "atomshell-version": "0.20.6",
     "atomshell-directory": "binaries",
     "atomshell-app-directory": "app",
     "polymer-prefixes": ["core", "paper", "polymer", "platform", "font"],
