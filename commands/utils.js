@@ -7,6 +7,7 @@ posh = {};
 
 posh.defaultConfig = {
     "root": ".",
+    "application-main-page": "index.html",
     "components": "components",
     "atomshell-version": "0.19.4",
     "atomshell-directory": "binaries",
@@ -35,6 +36,29 @@ posh.loadConfig = function() {
 
     config.__pathToComponents = config["root"] + "/" + config["atomshell-app-directory"] + "/" + config["components"]
     return config;
+}
+
+posh.getVersion = function() {
+    var pkg = JSON.parse(fs.readFileSync(__dirname + "/../package.json", 'utf8'));
+    console.log('Posh v' + pkg.version);
+}
+
+posh.runProject = function(html, options) {
+    var cfg = posh.loadConfig();
+
+    // Atom-Shell bin path
+    var myOS = require('os').platform();
+    var binpath = 'binaries/atom';
+    if (myOS.substr(0,3) == "win") { binpath = 'binaries\\atom.exe'; }
+    if (myOS.substr(0,6) == "darwin") { binpath = 'binaries/Atom.app/Contents/MacOS/Atom'; }
+
+    if (html) {
+        cfg["application-main-page"] = html;
+    }
+    var args = [cfg["atomshell-app-directory"], 'html:' + cfg["root"] + "/" + cfg["atomshell-app-directory"] + "/" + cfg["application-main-page"]];
+
+    if (options.debug) { args.push('debug:' + options.debug ); }
+    spawn(binpath, args);
 }
 
 // run component

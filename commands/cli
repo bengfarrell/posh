@@ -42,4 +42,22 @@ program
         }
     });
 
+// run
+program
+    .command('run [env]')
+    .description('Run our main program')
+    .option("-d, --debug [mode]", "Enable Debug Mode at start (developer tools)")
+    .action(function(env, options){
+        poshutils.runProject(env, options);
+    });
+
+// run
+program
+    .command('version')
+    .description('Get Posh version')
+    .option("-d, --debug [mode]", "Enable Debug Mode at start (developer tools)")
+    .action(function(env, options){
+        poshutils.getVersion();
+    });
+
 program.parse(process.argv);
