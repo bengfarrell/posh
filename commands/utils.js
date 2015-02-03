@@ -58,6 +58,7 @@ posh.runProject = function(html, options) {
     var args = [cfg["atomshell-app-directory"], 'html:' + cfg["root"] + "/" + cfg["atomshell-app-directory"] + "/" + cfg["application-main-page"]];
 
     if (options.debug) { args.push('debug:' + options.debug ); }
+    if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
     spawn(binpath, args);
 }
 
@@ -80,6 +81,8 @@ posh.runComponent = function(comp, options) {
     var args = [cfg["atomshell-app-directory"], 'html:' + cfg.__pathToComponents + '/' + comp + '/' + cfg["polymer-demo-path"]];
 
     if (options.debug) { args.push('debug:' + options.debug ); }
+    if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
+
     spawn(binpath, args);
 }
 

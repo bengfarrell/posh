@@ -1,6 +1,6 @@
 {
-  "name": "posh",
-  "version": "0.0.1",
+  "name": "poshery",
+  "version": "0.1.0",
   "preferGlobal": "true",
   "bin": {
     "posh": "commands/cli"

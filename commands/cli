@@ -35,6 +35,7 @@ program
     .description('Work with components: Run or list')
     .option("-p, --prefixed [mode]", "Restrict listing components to these prefixes")
     .option("-d, --debug [mode]", "Enable Debug Mode at start (developer tools)")
+    .option("-f, --fullscreen [mode]", "Enable FullScreen Mode at start (developer tools)")
     .action(function(env, options){
         switch (env) {
             case "list": poshutils.listComponents(options); break;
@@ -47,6 +48,7 @@ program
     .command('run [env]')
     .description('Run our main program')
     .option("-d, --debug [mode]", "Enable Debug Mode at start (developer tools)")
+    .option("-f, --fullscreen [mode]", "Enable FullScreen Mode at start (developer tools)")
     .action(function(env, options){
         poshutils.runProject(env, options);
     });
