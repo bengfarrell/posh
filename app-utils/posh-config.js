@@ -3,7 +3,7 @@ var poshcfg = function() {
 
   /** app defaults */
   this.html = 'index.html';
-  this.debug = true;
+  this.debug = false;
   this.frame = true;
   this.fullscreen = false;
   this.verbose = true;
