@@ -13,7 +13,7 @@ posh.defaultConfig = {
     "atomshell-directory": "binaries",
     "atomshell-app-directory": "app",
     "polymer-prefixes": ["core", "paper", "polymer", "platform", "font"],
-    "polymer-demo-path": "demo/demo.html",
+    "polymer-demo-path": "demo/index.html",
     "bower-dependencies": {"posh-starter": "https://github.com/theposhery/posh-starter.git#v0.1"},
     "npm-dependencies": {"posh": "git+https://github.com/bengfarrell/posh.git#master"},
     "use-bower-for-component-id": true
