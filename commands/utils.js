@@ -1,7 +1,7 @@
 var fs = require('fs');
 var fsutils = require('fs-utils');
 var spawn = require('win-spawn');
-var downloadatomshell = require('gulp-download-atom-shell');
+var downloadelectron = require('gulp-download-electron');
 
 posh = {};
 
@@ -9,9 +9,9 @@ posh.defaultConfig = {
     "root": ".",
     "application-main-page": "index.html",
     "components": "components",
-    "atomshell-version": "0.28.3",
-    "atomshell-directory": "binaries",
-    "atomshell-app-directory": "app",
+    "electron-version": "0.28.3",
+    "electron-directory": "binaries",
+    "electron-app-directory": "app",
     "polymer-prefixes": ["core", "paper", "polymer", "platform", "font"],
     "polymer-demo-path": "demo/index.html",
     "bower-dependencies": {"posh-starter": "https://github.com/theposhery/posh-starter.git#v0.1"},
@@ -34,7 +34,7 @@ posh.loadConfig = function() {
         }
     }
 
-    config.__pathToComponents = config["root"] + "/" + config["atomshell-app-directory"] + "/" + config["components"]
+    config.__pathToComponents = config["root"] + "/" + config["electron-app-directory"] + "/" + config["components"]
     return config;
 };
 
@@ -48,17 +48,18 @@ posh.runProject = function(html, options) {
 
     // Atom-Shell bin path
     var myOS = require('os').platform();
-    var binpath = 'binaries/atom';
-    if (myOS.substr(0,3) == "win") { binpath = 'binaries\\atom.exe'; }
-    if (myOS.substr(0,6) == "darwin") { binpath = 'binaries/Atom.app/Contents/MacOS/Atom'; }
+    var binpath = '';
+    if (myOS.substr(0,3) == "win") { binpath = 'binaries\\electron.exe'; }
+    if (myOS.substr(0,6) == "darwin") { binpath = 'binaries/Electron.app/Contents/MacOS/Electron'; }
 
     if (html) {
         cfg["application-main-page"] = html;
     }
-    var args = [cfg["atomshell-app-directory"], 'html:' + cfg["root"] + "/" + cfg["atomshell-app-directory"] + "/" + cfg["application-main-page"]];
+    var args = [cfg["electron-app-directory"], 'html:' + cfg["root"] + "/" + cfg["electron-app-directory"] + "/" + cfg["application-main-page"]];
 
     if (options.debug) { args.push('debug:' + options.debug ); }
     if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
+    console.log('Running: ' + binpath, args);
     spawn(binpath, args);
 };
 
@@ -74,15 +75,16 @@ posh.runComponent = function(comp, options) {
 
     // Atom-Shell bin path
     var myOS = require('os').platform();
-    var binpath = 'binaries/atom';
-    if (myOS.substr(0,3) == "win") { binpath = 'binaries\\atom.exe'; }
-    if (myOS.substr(0,6) == "darwin") { binpath = 'binaries/Atom.app/Contents/MacOS/Atom'; }
+    var binpath = '';
+    if (myOS.substr(0,3) == "win") { binpath = 'binaries\\electron.exe'; }
+    if (myOS.substr(0,6) == "darwin") { binpath = 'binaries/Electron.app/Contents/MacOS/Electron'; }
 
-    var args = [cfg["atomshell-app-directory"], 'html:' + cfg.__pathToComponents + '/' + comp + '/' + cfg["polymer-demo-path"]];
+    var args = [cfg["electron-app-directory"], 'html:' + cfg.__pathToComponents + '/' + comp + '/' + cfg["polymer-demo-path"]];
 
     if (options.debug) { args.push('debug:' + options.debug ); }
     if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
 
+    console.log('Running: ' + binpath, args);
     spawn(binpath, args);
 };
 
@@ -137,13 +139,13 @@ posh.filterBy = function(comp, options, cfg) {
     }
 };
 
-posh.installatom = function(env, cfg) {
+posh.installelectron = function(env, cfg) {
     // download atom shell
-    downloadatomshell({
-        version: cfg["atomshell-version"],
-        outputDir: cfg["atomshell-directory"]
+    downloadelectron({
+        version: cfg["electron-version"],
+        outputDir: cfg["electron-directory"]
     }, function() {
-        console.log("Downloaded Atom-Shell");
+        console.log("Downloaded Electron");
     });
 };
 
@@ -152,29 +154,29 @@ posh.create = function(env, cfg) {
     posh.installatom(env, cfg);
 
     // make application directory
-    if (!fs.existsSync(process.cwd() + "/" + cfg["atomshell-app-directory"])) {
-        fs.mkdirSync(process.cwd() + "/" +  cfg["atomshell-app-directory"])
+    if (!fs.existsSync(process.cwd() + "/" + cfg["electron-app-directory"])) {
+        fs.mkdirSync(process.cwd() + "/" +  cfg["electron-app-directory"])
     }
 
     // make component directory
-    if (!fs.existsSync(process.cwd() + "/" + cfg["atomshell-app-directory"]  + "/" + cfg["components"])) {
-        fs.mkdirSync(process.cwd() + "/" + cfg["atomshell-app-directory"] + "/" + cfg["components"])
+    if (!fs.existsSync(process.cwd() + "/" + cfg["electron-app-directory"]  + "/" + cfg["components"])) {
+        fs.mkdirSync(process.cwd() + "/" + cfg["electron-app-directory"] + "/" + cfg["components"])
     }
 
     // create bower file
-    if (!fs.existsSync(process.cwd() + "/" + cfg["atomshell-app-directory"]  + "/" + cfg["components"])) {
-        fs.mkdirSync(process.cwd() + "/" + cfg["atomshell-app-directory"] + "/" + cfg["components"])
+    if (!fs.existsSync(process.cwd() + "/" + cfg["electron-app-directory"]  + "/" + cfg["components"])) {
+        fs.mkdirSync(process.cwd() + "/" + cfg["electron-app-directory"] + "/" + cfg["components"])
     }
 
     // copy over starter files
-    if (!fs.existsSync(process.cwd() + "/" + cfg["atomshell-app-directory"] + "/main.js")) {
-        fsutils.copyFileSync(__dirname + "/../starterfiles/main.js", process.cwd() + "/" + cfg["atomshell-app-directory"] + "/main.js");
+    if (!fs.existsSync(process.cwd() + "/" + cfg["electron-app-directory"] + "/main.js")) {
+        fsutils.copyFileSync(__dirname + "/../starterfiles/main.js", process.cwd() + "/" + cfg["electron-app-directory"] + "/main.js");
     } else {
         console.log("It looks like you already have a main.js file, so Posh won't replace it");
     }
 
-    if (!fs.existsSync("./" + cfg["atomshell-app-directory"] + "/package.json")) {
-        fsutils.copyFileSync(__dirname + "/../starterfiles/atom-package.json", process.cwd() + "/" + cfg["atomshell-app-directory"] + "/package.json");
+    if (!fs.existsSync("./" + cfg["electron-app-directory"] + "/package.json")) {
+        fsutils.copyFileSync(__dirname + "/../starterfiles/atom-package.json", process.cwd() + "/" + cfg["electron-app-directory"] + "/package.json");
     } else {
         console.log("It looks like you already have a package.json file for your app, so Posh won't replace it");
     }

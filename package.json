@@ -9,7 +9,7 @@
   "dependencies": {
     "commander": "^2.5.0",
     "fs-utils": "~0.6.0",
-    "gulp-download-atom-shell": "0.0.4",
+    "gulp-download-electron": "0.0.5",
     "gulp-util": "^2.2.14",
     "win-spawn": "^2.0.0"
   }

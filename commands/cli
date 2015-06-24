@@ -22,11 +22,11 @@ program
 
 // Task to install atom shell
 program
-    .command('installatom [env]')
-    .description('install Atom-Shell (or reinstall a specific version')
+    .command('installelectron [env]')
+    .description('install Electron (or reinstall a specific version')
     .action(function(env, options){
         var cfg = poshutils.loadConfig();
-        poshutils.installatom(env, cfg)
+        poshutils.installelectron(env, cfg)
     });
 
 // Components task
