@@ -9,7 +9,7 @@ posh.defaultConfig = {
     "root": ".",
     "application-main-page": "index.html",
     "components": "components",
-    "atomshell-version": "0.20.6",
+    "atomshell-version": "0.28.3",
     "atomshell-directory": "binaries",
     "atomshell-app-directory": "app",
     "polymer-prefixes": ["core", "paper", "polymer", "platform", "font"],
@@ -17,7 +17,7 @@ posh.defaultConfig = {
     "bower-dependencies": {"posh-starter": "https://github.com/theposhery/posh-starter.git#v0.1"},
     "npm-dependencies": {"posh": "git+https://github.com/bengfarrell/posh.git#master"},
     "use-bower-for-component-id": true
-}
+};
 
 // load configuration
 posh.loadConfig = function() {
@@ -36,12 +36,12 @@ posh.loadConfig = function() {
 
     config.__pathToComponents = config["root"] + "/" + config["atomshell-app-directory"] + "/" + config["components"]
     return config;
-}
+};
 
 posh.getVersion = function() {
     var pkg = JSON.parse(fs.readFileSync(__dirname + "/../package.json", 'utf8'));
     console.log('Posh v' + pkg.version);
-}
+};
 
 posh.runProject = function(html, options) {
     var cfg = posh.loadConfig();
@@ -60,7 +60,7 @@ posh.runProject = function(html, options) {
     if (options.debug) { args.push('debug:' + options.debug ); }
     if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
     spawn(binpath, args);
-}
+};
 
 // run component
 posh.runComponent = function(comp, options) {
@@ -84,7 +84,7 @@ posh.runComponent = function(comp, options) {
     if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
 
     spawn(binpath, args);
-}
+};
 
 // list components
 posh.listComponents = function(options) {
@@ -109,7 +109,7 @@ posh.listComponents = function(options) {
             }
         }
     })
-}
+};
 
 // filter component listing by options
 posh.filterBy = function(comp, options, cfg) {
@@ -135,7 +135,7 @@ posh.filterBy = function(comp, options, cfg) {
     } else {
         return {name: comp, bower: bower};
     }
-}
+};
 
 posh.installatom = function(env, cfg) {
     // download atom shell
@@ -145,7 +145,7 @@ posh.installatom = function(env, cfg) {
     }, function() {
         console.log("Downloaded Atom-Shell");
     });
-}
+};
 
 posh.create = function(env, cfg) {
 
@@ -209,7 +209,7 @@ posh.create = function(env, cfg) {
         bower.stderr.on('data', function (data) { console.log(" " + data); });
     });
 
-}
+};
 
 // load dependencies
 posh.loadCurrentDependencies = function(src, dest) {
@@ -220,7 +220,7 @@ posh.loadCurrentDependencies = function(src, dest) {
         manifest = fsutils.readJSONSync(__dirname + "/" + src);
     }
     return manifest;
-}
+};
 
 // add dependencies to package (bower or package.json)
 posh.addDependencies = function(manifest, dependenciesToAdd) {
@@ -232,6 +232,6 @@ posh.addDependencies = function(manifest, dependenciesToAdd) {
         }
     }
     return manifest;
-}
+};
 
 module.exports = posh;
