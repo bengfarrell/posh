@@ -1,11 +1,11 @@
 {
-  "name": "poshery",
+  "name": "tron-cli",
   "version": "0.1.0",
   "preferGlobal": "true",
   "bin": {
-    "posh": "commands/cli"
+    "tron": "commands/cli"
   },
-  "main": "./lib/posh.js",
+  "main": "./lib/tron.js",
   "dependencies": {
     "commander": "^2.5.0",
     "fs-utils": "~0.6.0",

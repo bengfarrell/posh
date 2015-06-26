@@ -1,6 +1,6 @@
 var BrowserWindow = require('browser-window');
 
-var poshwin = function() {
+var tronwin = function() {
     /**
      * create new window
      */
@@ -12,4 +12,4 @@ var poshwin = function() {
     }
 }
 
-module.exports = poshwin;
+module.exports = tronwin;

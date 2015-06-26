@@ -3,34 +3,32 @@ var fsutils = require('fs-utils');
 var spawn = require('win-spawn');
 var downloadelectron = require('gulp-download-electron');
 
-posh = {};
+tron = {};
 
-posh.defaultConfig = {
+tron.defaultConfig = {
     "root": ".",
     "application-main-page": "index.html",
     "components": "components",
     "electron-version": "0.28.3",
     "electron-directory": "binaries",
     "electron-app-directory": "app",
-    "polymer-prefixes": ["core", "paper", "polymer", "platform", "font"],
-    "polymer-demo-path": "demo/index.html",
-    "bower-dependencies": {"posh-starter": "https://github.com/theposhery/posh-starter.git#v0.1"},
-    "npm-dependencies": {"posh": "git+https://github.com/bengfarrell/posh.git#master"},
+    "component-demo-path": "demo/index.html",
+    "npm-dependencies": {"tron-cli": "git+https://github.com/bengfarrell/tron-cli.git#master"},
     "use-bower-for-component-id": true
 };
 
 // load configuration
-posh.loadConfig = function() {
+tron.loadConfig = function() {
     var config;
-    if (fs.existsSync('./.posh')) {
-        config = JSON.parse(fs.readFileSync(cfg["root"] + '/.posh', 'utf8'));
+    if (fs.existsSync('./tron.json')) {
+        config = JSON.parse(fs.readFileSync(cfg["root"] + '/tron.json', 'utf8'));
     } else {
         config = {};
     }
 
-    for (var c in posh.defaultConfig) {
+    for (var c in tron.defaultConfig) {
         if (!config[c]) {
-            config[c] = posh.defaultConfig[c];
+            config[c] = tron.defaultConfig[c];
         }
     }
 
@@ -38,13 +36,13 @@ posh.loadConfig = function() {
     return config;
 };
 
-posh.getVersion = function() {
+tron.getVersion = function() {
     var pkg = JSON.parse(fs.readFileSync(__dirname + "/../package.json", 'utf8'));
-    console.log('Posh v' + pkg.version);
+    console.log('Tron v' + pkg.version);
 };
 
-posh.runProject = function(html, options) {
-    var cfg = posh.loadConfig();
+tron.runProject = function(html, options) {
+    var cfg = tron.loadConfig();
 
     // Atom-Shell bin path
     var myOS = require('os').platform();
@@ -59,17 +57,17 @@ posh.runProject = function(html, options) {
 
     if (options.debug) { args.push('debug:' + options.debug ); }
     if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
-    console.log('Running: ' + binpath, args);
+    console.log('Running project with Tron: ' + binpath, args);
     spawn(binpath, args);
 };
 
 // run component
-posh.runComponent = function(comp, options) {
-    var cfg = posh.loadConfig();
+tron.runComponent = function(comp, options) {
+    var cfg = tron.loadConfig();
     if (!fs.existsSync(cfg.__pathToComponents)) {
         console.log('Component directory does not exist: ' + cfg.__pathToComponents );
-        console.log('If you want to use a different directory, specify in the .posh file at the root of your project');
-        console.log(JSON.stringify(posh.defaultConfig, null, 2));
+        console.log('If you want to use a different directory, specify in the .tron file at the root of your project');
+        console.log(JSON.stringify(tron.defaultConfig, null, 2));
         return;
     }
 
@@ -79,28 +77,28 @@ posh.runComponent = function(comp, options) {
     if (myOS.substr(0,3) == "win") { binpath = 'binaries\\electron.exe'; }
     if (myOS.substr(0,6) == "darwin") { binpath = 'binaries/Electron.app/Contents/MacOS/Electron'; }
 
-    var args = [cfg["electron-app-directory"], 'html:' + cfg.__pathToComponents + '/' + comp + '/' + cfg["polymer-demo-path"]];
+    var args = [cfg["electron-app-directory"], 'html:' + cfg.__pathToComponents + '/' + comp + '/' + cfg["component-demo-path"]];
 
     if (options.debug) { args.push('debug:' + options.debug ); }
     if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
 
-    console.log('Running: ' + binpath, args);
+    console.log('Running component with Tron: ' + binpath, args);
     spawn(binpath, args);
 };
 
 // list components
-posh.listComponents = function(options) {
-    var cfg = posh.loadConfig();
+tron.listComponents = function(options) {
+    var cfg = tron.loadConfig();
     if (!fs.existsSync(cfg.__pathToComponents)) {
         console.log('Component directory does not exist: ' + cfg["root"] + '/' + cfg["components"] );
-        console.log('If you want to use a different directory, specify in the .posh file at the root of your project');
-        console.log(JSON.stringify(posh.defaultConfig, null, 2));
+        console.log('If you want to use a different directory, specify in the tron.json file at the root of your project');
+        console.log(JSON.stringify(tron.defaultConfig, null, 2));
         return;
     }
 
     var comps = fs.readdirSync(cfg.__pathToComponents);
     comps.forEach( function(comp) {
-        var result = posh.filterBy(comp, options, cfg);
+        var result = tron.filterBy(comp, options, cfg);
         if (result) {
             console.log("Component: " + result.name)
             if (result.bower && result.bower.version) {
@@ -114,7 +112,7 @@ posh.listComponents = function(options) {
 };
 
 // filter component listing by options
-posh.filterBy = function(comp, options, cfg) {
+tron.filterBy = function(comp, options, cfg) {
 
     // use bower.json to figure out if component has a polymer dependency
     var bower;
@@ -122,7 +120,7 @@ posh.filterBy = function(comp, options, cfg) {
     if (cfg["use-bower-for-component-id"]) {
         if (fs.existsSync(cfg.__pathToComponents + '/' + comp + '/bower.json' )) {
             bower = JSON.parse(fs.readFileSync(cfg.__pathToComponents + '/' + comp + '/bower.json'));
-            if (!bower.dependencies || !bower.dependencies.polymer) {
+            if (!bower.dependencies) {
                 return;
             }
         } else {
@@ -139,7 +137,15 @@ posh.filterBy = function(comp, options, cfg) {
     }
 };
 
-posh.installelectron = function(env, cfg) {
+tron.makeconfig = function(env, cfg) {
+    if (!fs.existsSync('tron.json')) {
+        fs.writeFileSync("tron.json", JSON.stringify(tron.defaultConfig, null, 2));
+    } else {
+        console.log('A Tron configuration file already exists for this project');
+    }
+};
+
+tron.installelectron = function(env, cfg) {
     // download atom shell
     downloadelectron({
         version: cfg["electron-version"],
@@ -149,9 +155,8 @@ posh.installelectron = function(env, cfg) {
     });
 };
 
-posh.create = function(env, cfg) {
-
-    posh.installatom(env, cfg);
+tron.create = function(env, cfg) {
+    tron.installatom(env, cfg);
 
     // make application directory
     if (!fs.existsSync(process.cwd() + "/" + cfg["electron-app-directory"])) {
@@ -172,25 +177,24 @@ posh.create = function(env, cfg) {
     if (!fs.existsSync(process.cwd() + "/" + cfg["electron-app-directory"] + "/main.js")) {
         fsutils.copyFileSync(__dirname + "/../starterfiles/main.js", process.cwd() + "/" + cfg["electron-app-directory"] + "/main.js");
     } else {
-        console.log("It looks like you already have a main.js file, so Posh won't replace it");
+        console.log("It looks like you already have a main.js file, so Tron won't replace it");
     }
 
     if (!fs.existsSync("./" + cfg["electron-app-directory"] + "/package.json")) {
         fsutils.copyFileSync(__dirname + "/../starterfiles/atom-package.json", process.cwd() + "/" + cfg["electron-app-directory"] + "/package.json");
     } else {
-        console.log("It looks like you already have a package.json file for your app, so Posh won't replace it");
+        console.log("It looks like you already have a package.json file for your app, so Tron won't replace it");
     }
 
     if (!fs.existsSync(process.cwd() + "/.bowerrc")) {
         fsutils.copyFileSync(__dirname + "/../starterfiles/.bowerrc", process.cwd() + "/.bowerrc");
     } else {
-        console.log("It looks like you already have a .bowerrc file for your app, so Posh won't replace it");
+        console.log("It looks like you already have a .bowerrc file for your app, so Tron won't replace it");
     }
 
-    var package = posh.loadCurrentDependencies("../starterfiles/rootproject-package.json", "./package.json");
-    var bower = posh.loadCurrentDependencies("../starterfiles/bower.json", "./bower.json");
-    bower = posh.addDependencies(bower, cfg["bower-dependencies"]);
-    package = posh.addDependencies(package, cfg["npm-dependencies"]);
+    var package = tron.loadCurrentDependencies("../starterfiles/rootproject-package.json", "./package.json");
+    var bower = tron.loadCurrentDependencies("../starterfiles/bower.json", "./bower.json");
+    package = tron.addDependencies(package, cfg["npm-dependencies"]);
 
     if (env) {
         bower.name = env;
@@ -205,7 +209,7 @@ posh.create = function(env, cfg) {
     npm.on('close', function (exitCode) {
         var bower = spawn("bower", ["install"]);
         bower.on('close', function(exitCode) {
-           console.log("Setup finished. Try your first component - enter 'posh comp posh-starter'");
+           console.log("Setup finished. Try running your project - enter 'tron run'");
         });
         bower.stdout.on('data', function (data) { console.log(" " + data); });
         bower.stderr.on('data', function (data) { console.log(" " + data); });
@@ -214,7 +218,7 @@ posh.create = function(env, cfg) {
 };
 
 // load dependencies
-posh.loadCurrentDependencies = function(src, dest) {
+tron.loadCurrentDependencies = function(src, dest) {
     var manifest;
     if (fs.existsSync(dest)) {
         manifest = fsutils.readJSONSync(dest);
@@ -225,7 +229,7 @@ posh.loadCurrentDependencies = function(src, dest) {
 };
 
 // add dependencies to package (bower or package.json)
-posh.addDependencies = function(manifest, dependenciesToAdd) {
+tron.addDependencies = function(manifest, dependenciesToAdd) {
     var currentDependencies = [];
     for (var c in manifest.dependencies) { currentDependencies.push(c); }
     for (var c in dependenciesToAdd) {
@@ -236,4 +240,4 @@ posh.addDependencies = function(manifest, dependenciesToAdd) {
     return manifest;
 };
 
-module.exports = posh;
+module.exports = tron;

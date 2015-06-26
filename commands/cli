@@ -1,32 +1,31 @@
 #!/usr/bin/env node
-
 var program = require('commander');
-var poshutils = require('./utils');
+var tronutils = require('./utils');
 
 // Task to list defaults
 program
     .command('defaults')
-    .description('list defaults that can be overriden by a .posh file')
+    .description('list defaults that can be overriden by a tron.json file')
     .action(function(env, options){
-        console.log(JSON.stringify(poshutils.defaultConfig, null, 2));
+        console.log(JSON.stringify(tronutils.defaultConfig, null, 2));
     });
 
 // Task to install the environment
 program
     .command('create [env]')
-    .description('install posh and friends for this project')
+    .description('install tron for this project')
     .action(function(env, options){
-        var cfg = poshutils.loadConfig();
-        poshutils.create(env, cfg)
+        var cfg = tronutils.loadConfig();
+        tronutils.create(env, cfg)
     });
 
-// Task to install atom shell
+// Task to install electron
 program
     .command('installelectron [env]')
     .description('install Electron (or reinstall a specific version')
     .action(function(env, options){
-        var cfg = poshutils.loadConfig();
-        poshutils.installelectron(env, cfg)
+        var cfg = tronutils.loadConfig();
+        tronutils.installelectron(env, cfg)
     });
 
 // Components task
@@ -38,9 +37,18 @@ program
     .option("-f, --fullscreen [mode]", "Enable FullScreen Mode at start (developer tools)")
     .action(function(env, options){
         switch (env) {
-            case "list": poshutils.listComponents(options); break;
-            default: poshutils.runComponent(env, options);
+            case "list": tronutils.listComponents(options); break;
+            default: tronutils.runComponent(env, options);
         }
+    });
+
+// Components task
+program
+    .command('makeconfig [env]')
+    .description('Make a tron.json file in your local project to tweak the defaults')
+    .action(function(env){
+        var cfg = tronutils.loadConfig();
+        tronutils.makeconfig(env);
     });
 
 // run
@@ -50,16 +58,15 @@ program
     .option("-d, --debug [mode]", "Enable Debug Mode at start (developer tools)")
     .option("-f, --fullscreen [mode]", "Enable FullScreen Mode at start (developer tools)")
     .action(function(env, options){
-        poshutils.runProject(env, options);
+        tronutils.runProject(env, options);
     });
 
 // run
 program
     .command('version')
-    .description('Get Posh version')
-    .option("-d, --debug [mode]", "Enable Debug Mode at start (developer tools)")
-    .action(function(env, options){
-        poshutils.getVersion();
+    .description('Get Tron version')
+    .action(function(env){
+        tronutils.getVersion();
     });
 
 program.parse(process.argv);

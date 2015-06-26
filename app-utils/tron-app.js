@@ -1,4 +1,4 @@
-var poshapp = function() {
+var tronapp = function() {
     var self = this;
 
     /** reference to main window */
@@ -11,7 +11,7 @@ var poshapp = function() {
      * start the app
      */
     this.start = function() {
-        var posh = require('../lib/posh.js');
+        var tron = require('../lib/tron.js');
 
         this.application = require('app');
         require('crash-reporter').start();
@@ -21,16 +21,16 @@ var poshapp = function() {
         });
 
         this.application.on('ready', function() {
-            var cfg = new posh.config();
-            self.mainWindow = new posh.windows().create(cfg);
+            var cfg = new tron.config();
+            self.mainWindow = new tron.windows().create(cfg);
 
             self.mainWindow.on('closed', function () {
                 self.mainWindow = null;
             });
         });
-    }
+    };
 
     this.start();
-}
+};
 
-module.exports = poshapp;
+module.exports = tronapp;

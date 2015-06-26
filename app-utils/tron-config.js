@@ -1,4 +1,4 @@
-var poshcfg = function() {
+var troncfg = function() {
   var self = this;
 
   /** app defaults */
@@ -46,4 +46,4 @@ var poshcfg = function() {
   this.load();
 }
 
-module.exports = poshcfg;
+module.exports = troncfg;
