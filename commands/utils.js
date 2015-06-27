@@ -6,7 +6,6 @@ var downloadelectron = require('gulp-download-electron');
 tron = {};
 
 tron.defaultConfig = {
-    "root": ".",
     "application-main-page": "index.html",
     "components": "components",
     "electron-version": "0.28.3",
@@ -21,7 +20,7 @@ tron.defaultConfig = {
 tron.loadConfig = function() {
     var config;
     if (fs.existsSync('./tron.json')) {
-        config = JSON.parse(fs.readFileSync(cfg["root"] + '/tron.json', 'utf8'));
+        config = JSON.parse(fs.readFileSync('./tron.json', 'utf8'));
     } else {
         config = {};
     }
@@ -32,7 +31,7 @@ tron.loadConfig = function() {
         }
     }
 
-    config.__pathToComponents = config["root"] + "/" + config["electron-app-directory"] + "/" + config["components"]
+    config.__pathToComponents = "./" + config["electron-app-directory"] + "/" + config["components"]
     return config;
 };
 
@@ -44,7 +43,7 @@ tron.getVersion = function() {
 tron.runProject = function(html, options) {
     var cfg = tron.loadConfig();
 
-    // Atom-Shell bin path
+    // Electron bin path
     var myOS = require('os').platform();
     var binpath = '';
     if (myOS.substr(0,3) == "win") { binpath = 'binaries\\electron.exe'; }
@@ -53,7 +52,7 @@ tron.runProject = function(html, options) {
     if (html) {
         cfg["application-main-page"] = html;
     }
-    var args = [cfg["electron-app-directory"], 'html:' + cfg["root"] + "/" + cfg["electron-app-directory"] + "/" + cfg["application-main-page"]];
+    var args = [cfg["electron-app-directory"], 'html:' + "./" + cfg["electron-app-directory"] + "/" + cfg["application-main-page"]];
 
     if (options.debug) { args.push('debug:' + options.debug ); }
     if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
@@ -71,7 +70,7 @@ tron.runComponent = function(comp, options) {
         return;
     }
 
-    // Atom-Shell bin path
+    // Electron bin path
     var myOS = require('os').platform();
     var binpath = '';
     if (myOS.substr(0,3) == "win") { binpath = 'binaries\\electron.exe'; }
@@ -90,7 +89,7 @@ tron.runComponent = function(comp, options) {
 tron.listComponents = function(options) {
     var cfg = tron.loadConfig();
     if (!fs.existsSync(cfg.__pathToComponents)) {
-        console.log('Component directory does not exist: ' + cfg["root"] + '/' + cfg["components"] );
+        console.log('Component directory does not exist: ' +'./' + cfg["components"] );
         console.log('If you want to use a different directory, specify in the tron.json file at the root of your project');
         console.log(JSON.stringify(tron.defaultConfig, null, 2));
         return;
@@ -146,7 +145,7 @@ tron.makeconfig = function(env, cfg) {
 };
 
 tron.installelectron = function(env, cfg) {
-    // download atom shell
+    // download electron
     downloadelectron({
         version: cfg["electron-version"],
         outputDir: cfg["electron-directory"]
@@ -156,7 +155,7 @@ tron.installelectron = function(env, cfg) {
 };
 
 tron.create = function(env, cfg) {
-    tron.installatom(env, cfg);
+    tron.installelectron(env, cfg);
 
     // make application directory
     if (!fs.existsSync(process.cwd() + "/" + cfg["electron-app-directory"])) {
@@ -180,8 +179,14 @@ tron.create = function(env, cfg) {
         console.log("It looks like you already have a main.js file, so Tron won't replace it");
     }
 
+    if (!fs.existsSync(process.cwd() + "/" + cfg["electron-app-directory"] + "/index.html")) {
+        fsutils.copyFileSync(__dirname + "/../starterfiles/index.html", process.cwd() + "/" + cfg["electron-app-directory"] + "/index.html");
+    } else {
+        console.log("It looks like you already have an index.html file, so Tron won't replace it");
+    }
+
     if (!fs.existsSync("./" + cfg["electron-app-directory"] + "/package.json")) {
-        fsutils.copyFileSync(__dirname + "/../starterfiles/atom-package.json", process.cwd() + "/" + cfg["electron-app-directory"] + "/package.json");
+        fsutils.copyFileSync(__dirname + "/../starterfiles/tron-package.json", process.cwd() + "/" + cfg["electron-app-directory"] + "/package.json");
     } else {
         console.log("It looks like you already have a package.json file for your app, so Tron won't replace it");
     }
@@ -200,6 +205,8 @@ tron.create = function(env, cfg) {
         bower.name = env;
         package.name = env;
     }
+
+    tron.makeconfig(env);
 
     fs.writeFileSync("bower.json", JSON.stringify(bower, null, 2));
     fs.writeFileSync("package.json", JSON.stringify(package, null, 2));

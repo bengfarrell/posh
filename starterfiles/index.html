@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Hi from Tron</title>
+
+    <style>
+        #htmlloc {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+<div>Hi from Tron and Electron</div>
+<div>I live here: <span id="htmlloc"></span></div>
+<div>Edit me or replace me.</div>
+
+<h2>Your config settings</h2>
+<div id="config"></div>
+
+<script>
+    var fs = require('fs');
+    var config = JSON.parse(fs.readFileSync('./tron.json'));
+    document.querySelector('#config').innerHTML = JSON.stringify(config, null, 2);
+    document.querySelector('#htmlloc').innerHTML = config['electron-app-directory'] + '/' + config['application-main-page'];
+</script>
+
+</body>
+</html>
