@@ -61,7 +61,7 @@ program
         tronutils.runProject(env, options);
     });
 
-// run
+// get version
 program
     .command('version')
     .description('Get Tron version')

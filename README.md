@@ -1,14 +1,18 @@
 # Tron-CLI
 Version
-0.1.0
+0.1.2
 
-Tron-CLI is a quick way to create and run your [Electron]:http://electron.atom.io/ projects.
+Tron-CLI is a quick way to create and run your [Electron](http://electron.atom.io/) projects.
 
 Tron offers 3 major things
 
   - Create an entire barebones Electron project from scratch in your project directory
   - Run your project in development mode via Tron's CLI
   - Run and list your components (assuming they can be run standalone)
+
+
+Tron does NOT offer a way to make application distributions, it's strictly for development usage. For this, you may want to try [Electron-Packager](https://github.com/maxogden/electron-packager)
+
 
 ### Installation
 
@@ -161,7 +165,7 @@ $ tron run --debug
 
 ** Working with Components **
 
-Not all components are self-runnable. This part of Tron is heavily inspired for use with [Polymer]:(https://www.polymer-project.org). Polymer is geared towards Web Component creation, and an artifact of this workflow is that each and every component you make should be runnable and demonstratable on its own. Polymer is new, and subject to change, but it's demo files are typically run from <yourcomponent>/demo/index.html. Tron uses this path to target your component when trying to run it. This path can be changed via the "tron.config" file if you like.
+Not all components are self-runnable. This part of Tron is heavily inspired for use with [Polymer](https://www.polymer-project.org). Polymer is geared towards Web Component creation, and an artifact of this workflow is that each and every component you make should be runnable and demonstratable on its own. Polymer is new, and subject to change, but it's demo files are typically run from <yourcomponent>/demo/index.html. Tron uses this path to target your component when trying to run it. This path can be changed via the "tron.config" file if you like.
 
 To run a component demo:
 ```
@@ -190,3 +194,14 @@ So for example, Google's Material design components for Polymer are under the na
 $ tron comp list -p paper
 ```
 
+### Todo for 0.2
+
+* Make separate Tron package for application starter JS
+* Move app starter JS into app/package.json
+* Integrate [Electron-Rebuild](https://github.com/paulcbetts/electron-rebuild) to build NPM dependencies for Electron
+
+### Thanks!
+* [Github](https://github.com/) for Atom and Electron
+* [Gulp-Download-Electron](https://github.com/kitematic/gulp-download-electron) because Tron uses it to download Electron binaries
+* [Commander](https://github.com/tj/commander.js) because CLI tools like Tron are built more easily with it
+* And any other dependencies Tron uses
