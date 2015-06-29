@@ -56,7 +56,7 @@ program
     .command('run [env]')
     .description('Run our main program')
     .option("-d, --debug [mode]", "Enable Debug Mode at start (developer tools)")
-    .option("-f, --fullscreen [mode]", "Enable FullScreen Mode at start (developer tools)")
+    .option("-f, --fullscreen [mode]", "Enable FullScreen Mode at start")
     .action(function(env, options){
         tronutils.runProject(env, options);
     });

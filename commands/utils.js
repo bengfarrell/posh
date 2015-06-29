@@ -12,7 +12,7 @@ tron.defaultConfig = {
     "electron-directory": "binaries",
     "electron-app-directory": "app",
     "component-demo-path": "demo/index.html",
-    "npm-dependencies": {"tron-cli": "git+https://github.com/bengfarrell/tron-cli.git#master"},
+    "npm-dependencies": {"tron-cli": "*"},
     "use-bower-for-component-id": true
 };
 
