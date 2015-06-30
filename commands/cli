@@ -28,7 +28,7 @@ program
         tronutils.installelectron(env, cfg)
     });
 
-// Components task
+// task for components
 program
     .command('comp [env]')
     .description('Work with components: Run or list')

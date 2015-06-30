@@ -1,6 +1,6 @@
 # Tron-CLI
 Version
-0.2.2
+0.2.3
 
 Tron-CLI is a quick way to create and run your [Electron](http://electron.atom.io/) projects.
 
