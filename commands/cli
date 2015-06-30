@@ -42,7 +42,7 @@ program
         }
     });
 
-// Components task
+// makeconfig
 program
     .command('makeconfig [env]')
     .description('Make a tron.json file in your local project to tweak the defaults')

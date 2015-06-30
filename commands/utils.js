@@ -161,7 +161,11 @@ tron.rebuild = function() {
     var path = '';
     if (myOS.substr(0,3) == "win") { path = cfg["electron-app-directory"] + '\\node_modules\\.bin\\electron-rebuild'; }
     if (myOS.substr(0,6) == "darwin") { path = cfg["electron-app-directory"] + '/node_modules/.bin/electron-rebuild'; }
-    spawn(path + ' --version ' + cfg['electron-version']);
+    var args = ['--version', cfg['electron-version']];
+    var child = spawn(path, args);
+    child.stdout.on('close', function (data) {
+        console.log('Finished Electron Rebuild');
+    });
 };
 
 tron.create = function(env, cfg) {

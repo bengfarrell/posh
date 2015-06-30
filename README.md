@@ -171,7 +171,12 @@ $ tron run --debug
 
 ** Working with Components **
 
-Not all components are self-runnable. This part of Tron is heavily inspired for use with [Polymer](https://www.polymer-project.org). Polymer is geared towards Web Component creation, and an artifact of this workflow is that each and every component you make should be runnable and demonstratable on its own. Polymer is new, and subject to change, but it's demo files are typically run from <yourcomponent>/demo/index.html. Tron uses this path to target your component when trying to run it. This path can be changed via the "tron.config" file if you like.
+Not all components are self-runnable. This part of Tron is heavily inspired for use with [Polymer](https://www.polymer-project.org).
+Polymer is geared towards Web Component creation, and an artifact of this workflow is that each and every component you make should be
+runnable and demonstratable on its own. Polymer is new, and subject to change, but it's demo files are typically run from <yourcomponent>/demo/index.html.
+Tron uses this path to target your component when trying to run it. This path can be changed via the "tron.config" file if you like.
+In fact, Google's Polymer components offer a demo in the component root /demo.html. Meanwhile, components generated with the Yeoman Polymer Generator
+will put your demo file as /demo/index.html. Tron assumes the latter, but feel free to change the path in tron.json.
 
 To run a component demo:
 ```
