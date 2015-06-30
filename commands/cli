@@ -69,4 +69,12 @@ program
         tronutils.getVersion();
     });
 
+// rebuild node modules
+program
+    .command('rebuild')
+    .description('Rebuild Node modules for Electron inside your application')
+    .action(function(env){
+        tronutils.rebuild();
+    });
+
 program.parse(process.argv);

@@ -12,7 +12,7 @@ tron.defaultConfig = {
     "electron-directory": "binaries",
     "electron-app-directory": "app",
     "component-demo-path": "demo/index.html",
-    "npm-dependencies": {"tron-app": "^0.2.0"},
+    "npm-dependencies": {"tron-app": "^0.2.0", "electron-rebuild": "^0.2.2" },
     "use-bower-for-component-id": true
 };
 
@@ -152,6 +152,16 @@ tron.installelectron = function(env, cfg) {
     }, function() {
         console.log("Downloaded Electron");
     });
+};
+
+// rebuild node modules
+tron.rebuild = function() {
+    var cfg = tron.loadConfig();
+    var myOS = require('os').platform();
+    var path = '';
+    if (myOS.substr(0,3) == "win") { path = cfg["electron-app-directory"] + '\\node_modules\\.bin\\electron-rebuild'; }
+    if (myOS.substr(0,6) == "darwin") { path = cfg["electron-app-directory"] + '/node_modules/.bin/electron-rebuild'; }
+    spawn(path + ' --version ' + cfg['electron-version']);
 };
 
 tron.create = function(env, cfg) {
