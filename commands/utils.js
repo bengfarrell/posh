@@ -12,7 +12,7 @@ tron.defaultConfig = {
     "electron-directory": "binaries",
     "electron-app-directory": "app",
     "component-demo-path": "demo/index.html",
-    "npm-dependencies": {"tron-cli": "*"},
+    "npm-dependencies": {"tron-app": "^0.2.0"},
     "use-bower-for-component-id": true
 };
 
@@ -197,7 +197,7 @@ tron.create = function(env, cfg) {
         console.log("It looks like you already have a .bowerrc file for your app, so Tron won't replace it");
     }
 
-    var package = tron.loadCurrentDependencies("../starterfiles/rootproject-package.json", "./package.json");
+    var package = tron.loadCurrentDependencies("../starterfiles/tron-package.json", "./package.json");
     var bower = tron.loadCurrentDependencies("../starterfiles/bower.json", "./bower.json");
     package = tron.addDependencies(package, cfg["npm-dependencies"]);
 
@@ -208,18 +208,23 @@ tron.create = function(env, cfg) {
 
     tron.makeconfig(env);
 
-    fs.writeFileSync("bower.json", JSON.stringify(bower, null, 2));
-    fs.writeFileSync("package.json", JSON.stringify(package, null, 2));
-    var npm = spawn("npm", ["install"]);
+    fs.writeFileSync('bower.json', JSON.stringify(bower, null, 2));
+    fs.writeFileSync(cfg['electron-app-directory'] + '/' + 'package.json', JSON.stringify(package, null, 2));
+
+    // spawn npm from electron app directory
+    process.chdir(cfg['electron-app-directory']);
+    var npm = spawn('npm', ['install']);
     npm.stdout.on('data', function (data) { console.log(" " + data); });
     npm.stderr.on('data', function (data) { console.log(" " + data); });
     npm.on('close', function (exitCode) {
-        var bower = spawn("bower", ["install"]);
+        console.log("Setup finished. Try running your project - enter 'tron run'");
+        /* No bower deps yet, why bother...
+        var bower = spawn('bower', ['install']);
         bower.on('close', function(exitCode) {
            console.log("Setup finished. Try running your project - enter 'tron run'");
         });
         bower.stdout.on('data', function (data) { console.log(" " + data); });
-        bower.stderr.on('data', function (data) { console.log(" " + data); });
+        bower.stderr.on('data', function (data) { console.log(" " + data); });*/
     });
 
 };
@@ -238,6 +243,7 @@ tron.loadCurrentDependencies = function(src, dest) {
 // add dependencies to package (bower or package.json)
 tron.addDependencies = function(manifest, dependenciesToAdd) {
     var currentDependencies = [];
+    if (!manifest.dependencies) { manifest.dependencies = {}; }
     for (var c in manifest.dependencies) { currentDependencies.push(c); }
     for (var c in dependenciesToAdd) {
         if ( currentDependencies.indexOf(c) == -1 ) {
