@@ -1,6 +1,6 @@
 # Tron-CLI
 Version
-0.2.0
+0.2.2
 
 Tron-CLI is a quick way to create and run your [Electron](http://electron.atom.io/) projects.
 
@@ -93,6 +93,8 @@ $ tron defaults
 ```
 
 Rebuild your Electron Application's Node Modules
+(important: Rebuild will not work without the electron-rebuild as a dependency in your app's package.json. From your application directory, run npm install --save electron-rebuild.
+Be aware that this requires you to have XCode or Visual Studio installed as rebuild helps you to rebuild your C++ node modules. If you don't have any, then this step isn't necessary)
 ```
 $ tron rebuild
 ```

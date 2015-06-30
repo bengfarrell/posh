@@ -12,7 +12,7 @@ tron.defaultConfig = {
     "electron-directory": "binaries",
     "electron-app-directory": "app",
     "component-demo-path": "demo/index.html",
-    "npm-dependencies": {"tron-app": "^0.2.0", "electron-rebuild": "^0.2.2" },
+    "npm-dependencies": {"tron-app": "^0.2.0"},
     "use-bower-for-component-id": true
 };
 
