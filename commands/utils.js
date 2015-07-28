@@ -57,7 +57,7 @@ tron.runProject = function(html, options) {
     if (options.debug) { args.push('debug:' + options.debug ); }
     if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
     console.log('Running project with Tron: ' + binpath, args);
-    spawn(binpath, args);
+    spawn(binpath, args, {stdio: 'inherit'});
 };
 
 // run component
@@ -82,7 +82,7 @@ tron.runComponent = function(comp, options) {
     if (options.fullscreen) { args.push('fullscreen:' + options.fullscreen ); }
 
     console.log('Running component with Tron: ' + binpath, args);
-    spawn(binpath, args);
+    spawn(binpath, args, {stdio: 'inherit'});
 };
 
 // list components
